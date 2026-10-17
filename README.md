@@ -1,1 +1,1 @@
-# IBM-Z-Datathon---CareerSynk-Impact
+# IBM Z Datathon - CareerSynk-Impact
