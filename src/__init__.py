@@ -1,0 +1,1 @@
+"""Careersynk Impact package root."""
