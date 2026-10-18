@@ -113,6 +113,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Interactive Web Demo Route
+static_dir = Path(__file__).resolve().parent / "static"
+if static_dir.exists():
+    @app.get("/", include_in_schema=False)
+    def get_demo_ui():
+        """Serve interactive demonstration UI."""
+        from fastapi.responses import FileResponse
+        return FileResponse(static_dir / "index.html")
+
 
 @app.get("/health", response_model=HealthResponse, tags=["System"])
 def get_health() -> HealthResponse:

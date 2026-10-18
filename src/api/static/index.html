@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerSynk Impact — Counterfactual Readiness Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #0f62fe;
+      --accent-cyan: #1192e8;
+      --accent-teal: #00b4a0;
+      --accent-purple: #8a3ffc;
+      --text-main: #f4f4f4;
+      --text-muted: #8d8d8d;
+      --success: #24a148;
+      --warning: #f1c21b;
+      --danger: #da1e28;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(15, 98, 254, 0.12), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(138, 63, 252, 0.10), transparent 40%);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+
+    .brand-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-ibm {
+      background: rgba(15, 98, 254, 0.18);
+      color: #78a9ff;
+      border: 1px solid rgba(15, 98, 254, 0.4);
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    .badge-health {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      background: rgba(36, 161, 72, 0.15);
+      color: #42be65;
+      border: 1px solid rgba(36, 161, 72, 0.3);
+    }
+    .badge-health.down {
+      background: rgba(218, 30, 40, 0.15);
+      color: #ff8389;
+      border-color: rgba(218, 30, 40, 0.3);
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #42be65;
+      box-shadow: 0 0 8px #42be65;
+    }
+    .badge-health.down .dot {
+      background: #ff8389;
+      box-shadow: 0 0 8px #ff8389;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      background: rgba(10, 13, 20, 0.85);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.25);
+    }
+
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #c6c6c6;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip:hover {
+      background: rgba(15, 98, 254, 0.25);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.2s ease, transform 0.1s ease;
+      margin-top: 1rem;
+    }
+
+    .btn-submit:hover {
+      background: #0353e9;
+    }
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .readiness-meter {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .score-circle {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      background: conic-gradient(var(--accent-teal) calc(var(--pct, 0) * 1%), rgba(255, 255, 255, 0.08) 0);
+    }
+
+    .score-circle::before {
+      content: '';
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--card-bg);
+    }
+
+    .score-val {
+      position: relative;
+      z-index: 1;
+    }
+
+    .score-meta h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .score-meta p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .gap-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.85rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .gap-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(15, 98, 254, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .gap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.35rem;
+    }
+
+    .gap-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .delta-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(0, 180, 160, 0.15);
+      color: var(--accent-teal);
+      border: 1px solid rgba(0, 180, 160, 0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .gap-explanation {
+      font-size: 0.85rem;
+      color: #c6c6c6;
+      line-height: 1.4;
+    }
+
+    .weight-info {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+
+    .disclaimer-box {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-left: 2px solid var(--accent-blue);
+      padding-left: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 850px) {
+      .grid-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="brand-title">
+          <span>CareerSynk Impact</span>
+          <span class="badge-ibm">LinuxONE s390x Engine</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Counterfactual Skill-Gap Discovery & Readiness Scoring Architecture
+        </p>
+      </div>
+      <div id="healthBadge" class="badge-health">
+        <div class="dot"></div>
+        <span id="healthText">In-Memory Engine Live</span>
+      </div>
+    </header>
+
+    <div class="grid-layout">
+      <!-- Input Panel -->
+      <section class="card">
+        <h2>Target Career & Candidate Aptitude</h2>
+
+        <div class="form-group">
+          <label for="occSelect">Select Target Occupation</label>
+          <select id="occSelect">
+            <option value="occ:onet:15-1252.00">Software Developers (O*NET 15-1252.00)</option>
+            <option value="occ:onet:11-1021.00">General & Operations Managers (O*NET 11-1021.00)</option>
+            <option value="occ:onet:15-2051.00">Data Scientists (O*NET 15-2051.00)</option>
+            <option value="occ:onet:15-1212.00">Information Security Analysts (O*NET 15-1212.00)</option>
+            <option value="occ:onet:29-1141.00">Registered Nurses (O*NET 29-1141.00)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Load Synthetic Profile Presets</label>
+          <div class="preset-chips">
+            <span class="chip" onclick="loadPreset('cs_grad')">CS Graduate</span>
+            <span class="chip" onclick="loadPreset('career_switcher')">Retail Career Switcher</span>
+            <span class="chip" onclick="loadPreset('tech_lead')">Mid-Level Tech Lead</span>
+            <span class="chip" onclick="loadPreset('data_analyst')">Junior Data Analyst</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="skillsInput">Candidate Skills (Comma-Separated)</label>
+          <textarea id="skillsInput" rows="5" placeholder="e.g. Python, SQL, Git, Data Structures, Critical Thinking"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="topNSelect">Top Interventions to Recommend</label>
+          <select id="topNSelect">
+            <option value="3">Top 3 High-Impact Skill Gaps</option>
+            <option value="5" selected>Top 5 High-Impact Skill Gaps</option>
+            <option value="10">Top 10 High-Impact Skill Gaps</option>
+          </select>
+        </div>
+
+        <button id="runBtn" class="btn-submit" onclick="runSimulation()">
+          <span>Simulate Counterfactual Interventions</span>
+          <span style="font-family: monospace;">&rarr;</span>
+        </button>
+      </section>
+
+      <!-- Results Panel -->
+      <section class="card">
+        <h2>Live Counterfactual Readiness Analysis</h2>
+        
+        <div id="resultsContent">
+          <div class="empty-state">
+            <p>Select an occupation, input current candidate skills, and click simulate to view real-time readiness scoring and counterfactual gap recommendations.</p>
+          </div>
+        </div>
+
+        <div class="disclaimer-box">
+          <strong>Mandatory Non-Causal Modeling Disclaimer</strong>: Readiness scores and counterfactual deltas are statistical associations derived from cross-sectional occupational data. They indicate correlation with skill requirements and transferable aptitude, not a guarantee of hiring or causal wage uplift.
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const PRESETS = {
+      cs_grad: ["Python", "Git", "Data Structures", "Object-Oriented Programming", "Algorithms", "Software Engineering"],
+      career_switcher: ["Customer Service", "Sales", "Inventory Management", "Active Listening", "Cash Handling", "Communication"],
+      tech_lead: ["Python", "System Architecture", "Mentoring", "Agile Methodologies", "Code Review", "Strategic Planning"],
+      data_analyst: ["SQL", "Excel", "Tableau", "Data Analysis", "Statistics", "Reporting"]
+    };
+
+    function loadPreset(key) {
+      if (PRESETS[key]) {
+        document.getElementById('skillsInput').value = PRESETS[key].join(', ');
+      }
+    }
+
+    // Initialize with default preset
+    loadPreset('career_switcher');
+
+    async function checkHealth() {
+      try {
+        const res = await fetch('/health');
+        if (res.ok) {
+          const data = await res.json();
+          const badge = document.getElementById('healthBadge');
+          badge.className = "badge-health";
+          document.getElementById('healthText').textContent = "LinuxONE Engine Active";
+        }
+      } catch (e) {
+        const badge = document.getElementById('healthBadge');
+        badge.className = "badge-health down";
+        document.getElementById('healthText').textContent = "Service Offline";
+      }
+    }
+
+    async function runSimulation() {
+      const occId = document.getElementById('occSelect').value;
+      const skillsText = document.getElementById('skillsInput').value;
+      const topN = parseInt(document.getElementById('topNSelect').value);
+      const btn = document.getElementById('runBtn');
+
+      const skills = skillsText.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+      btn.disabled = true;
+      btn.innerHTML = "Computing Counterfactual Deltas...";
+
+      try {
+        const res = await fetch('/api/v1/counterfactual-ranking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            candidate_skills: skills,
+            occupation_id: occId,
+            top_n: topN
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          alert("Error: " + (err.detail || "Failed to execute simulation"));
+          return;
+        }
+
+        const data = await res.json();
+        renderResults(data);
+      } catch (err) {
+        alert("Network or inference error: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "<span>Simulate Counterfactual Interventions</span> &rarr;";
+      }
+    }
+
+    function renderResults(data) {
+      const pct = Math.round(data.baseline_score * 100);
+      const container = document.getElementById('resultsContent');
+
+      let gapsHtml = '';
+      if (!data.ranked_gaps || data.ranked_gaps.length === 0) {
+        gapsHtml = '<p style="color: var(--success); margin: 1rem 0;">Candidate already satisfies all evaluated core requirements for this occupation!</p>';
+      } else {
+        data.ranked_gaps.forEach((gap, idx) => {
+          const deltaPct = (gap.predicted_delta * 100).toFixed(2);
+          const hypoPct = (gap.hypothetical_score * 100).toFixed(1);
+          gapsHtml += `
+            <div class="gap-card">
+              <div class="gap-header">
+                <span class="gap-title">#${idx + 1} ${gap.skill_name}</span>
+                <span class="delta-badge">+${deltaPct}% Readiness</span>
+              </div>
+              <div class="gap-explanation">${gap.explanation}</div>
+              <div class="weight-info">
+                Target Role Weight: ${gap.requirement_weight.toFixed(3)} | Projected Overall Score: ${hypoPct}%
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = `
+        <div class="readiness-meter">
+          <div class="score-circle" style="--pct: ${pct};">
+            <span class="score-val">${pct}%</span>
+          </div>
+          <div class="score-meta">
+            <h3>${data.occupation_title}</h3>
+            <p>Baseline Readiness Score: <strong>${data.baseline_score.toFixed(4)}</strong></p>
+            <p>Evaluating ${skills.length || 0} candidate skills across occupational requirement graph.</p>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+          Ranked Counterfactual Interventions (Ordered by Predicted Delta)
+        </h4>
+        <div>${gapsHtml}</div>
+      `;
+    }
+
+    checkHealth();
+  </script>
+</body>
+</html>
