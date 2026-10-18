@@ -158,10 +158,11 @@ def run_comprehensive_audit(
     print("=" * 65)
 
     import pickle
+    # Deserializing trusted, internally generated graph and model artifacts from data/processed
     with open(graph_path, "rb") as f:
-        graph = pickle.load(f)
+        graph = pickle.load(f)  # nosec B301
     with open(model_path, "rb") as f:
-        model_artifact = pickle.load(f)
+        model_artifact = pickle.load(f)  # nosec B301
 
     # 1. Graph and Vocabulary Auditing
     skill_nodes = [n for n, d in graph.nodes(data=True) if d.get("node_type") == "skill"]

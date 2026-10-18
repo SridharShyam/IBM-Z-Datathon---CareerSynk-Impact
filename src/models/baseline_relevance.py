@@ -187,7 +187,8 @@ def train_and_evaluate_baseline(
         out_p = Path(model_output_path)
         out_p.parent.mkdir(parents=True, exist_ok=True)
         with open(out_p, "wb") as f:
-            pickle.dump({
+            # Model artifact serialization of scikit-learn model, TF-IDF vectorizer, and embedding dictionary
+            pickle.dump({  # nosec B301
                 "model": hgbr_model,
                 "tfidf": tfidf,
                 "skill_emb_map": skill_emb_map,
