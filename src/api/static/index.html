@@ -59,6 +59,16 @@
       gap: 0.75rem;
     }
 
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .btn-arrow {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
     .badge-ibm {
       background: rgba(15, 98, 254, 0.18);
       color: #78a9ff;
@@ -110,6 +120,7 @@
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 1.75rem;
+      -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
@@ -335,7 +346,7 @@
           <span>CareerSynk Impact</span>
           <span class="badge-ibm">LinuxONE s390x Engine</span>
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+        <p class="brand-subtitle">
           Counterfactual Skill-Gap Discovery & Readiness Scoring Architecture
         </p>
       </div>
@@ -387,7 +398,7 @@
 
         <button id="runBtn" class="btn-submit" onclick="runSimulation()">
           <span>Simulate Counterfactual Interventions</span>
-          <span style="font-family: monospace;">&rarr;</span>
+          <span class="btn-arrow">&rarr;</span>
         </button>
       </section>
 
